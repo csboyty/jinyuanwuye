@@ -1,0 +1,62 @@
+var serviceCreate=(function(config,functions){
+    return{
+        submitForm:function(form){
+            var me=this;
+            functions.showLoading();
+            $(form).ajaxSubmit({
+                dataType:"json",
+                success:function(response){
+                    if(response.success){
+                        $().toastmessage("showSuccessToast",config.messages.optSuccess);
+                        setTimeout(function(){
+                            window.location.href="service/show";
+                        },3000);
+                    }else{
+                        functions.ajaxReturnErrorHandler(response.error_code);
+                    }
+                },
+                error:function(){
+                    functions.ajaxErrorHandler();
+                }
+            });
+        }
+    }
+})(config,functions);
+
+$(document).ready(function(){
+
+    $("#myForm").validate({
+        ignore:[],
+        rules:{
+            remark:{
+                required:true,
+                maxlength:500
+            },
+            address:{
+                required:true,
+                maxlength:32
+            },
+            tel:{
+                required:true,
+                maxlength:15
+            }
+        },
+        messages:{
+            remark:{
+                required:config.validErrors.required,
+                maxlength:config.validErrors.maxLength.replace("${max}",500)
+            },
+            address:{
+                required:config.validErrors.required,
+                maxlength:config.validErrors.maxLength.replace("${max}",32)
+            },
+            tel:{
+                required:config.validErrors.required,
+                maxlength:config.validErrors.maxLength.replace("${max}",15)
+            }
+        },
+        submitHandler:function(form) {
+            serviceCreate.submitForm(form);
+        }
+    });
+});
