@@ -51,6 +51,9 @@ a{
     background: #373737;
     height: 70px;
 }
+label.error{
+    color:red;
+}
 
 /**
 *logo

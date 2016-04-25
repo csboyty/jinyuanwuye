@@ -125,18 +125,39 @@ class UserController extends Controller
             $params["role"]=USER::ROLE_ADMIN;
             $model->generateAuthKey();
             $params["auth_key"]=$model->getAuthKey();
+
+            //对密码加密
+            $model->setPassword($params["password"]);
+            $params["password"]=$model->getAttribute("password");
         }
 
+        $data=array();
+
+        //yii自动生成的form参数是Enterprise["name"]这种形式，获取后就会是在一个Enterprise中
+        $data["User"]=$params;
+
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if ($model->load($data) && $model->save()) {
+            return [
+                "success"=>true
+            ];
+        }else{
+            return [
+                "success"=>false,
+                "error_code"=>1
+            ];
+        }
+    }
+    public function actionSetPassword(){
+        $params=Yii::$app->request->post();
+        $model = $this->findModel($params["user_id"]);
 
         //对密码加密
         $model->setPassword($params["password"]);
         $params["password"]=$model->getAttribute("password");
 
-
-
         $data=array();
-
-        //yii自动生成的form参数是Enterprise["name"]这种形式，获取后就会是在一个Enterprise中
         $data["User"]=$params;
 
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

@@ -24,6 +24,11 @@ var userCreateOrUpdate=(function(config,functions){
 })(config,functions);
 
 $(document).ready(function(){
+    $('#myTabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show')
+    });
+
     $("#myForm").validate({
         ignore:[],
         rules: {
@@ -37,10 +42,28 @@ $(document).ready(function(){
             }
         },
         messages: {
-            email: {
+            name: {
                 required:config.validErrors.required,
                 maxlength:config.validErrors.maxLength.replace("${max}",30)
             },
+            password:{
+                required:config.validErrors.required,
+                rangelength:config.validErrors.rangLength.replace("${min}",6).replace("${max}",20)
+            }
+        },
+        submitHandler:function(form) {
+            userCreateOrUpdate.submitForm(form);
+        }
+    });
+    $("#myFormPWD").validate({
+        ignore:[],
+        rules: {
+            password:{
+                required:true,
+                rangelength:[6, 20]
+            }
+        },
+        messages: {
             password:{
                 required:config.validErrors.required,
                 rangelength:config.validErrors.rangLength.replace("${min}",6).replace("${max}",20)
