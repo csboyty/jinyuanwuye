@@ -155,14 +155,10 @@ class UserController extends Controller
 
         //对密码加密
         $model->setPassword($params["password"]);
-        $params["password"]=$model->getAttribute("password");
-
-        $data=array();
-        $data["User"]=$params;
 
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        if ($model->load($data) && $model->save()) {
+        if ($model->save()) {
             return [
                 "success"=>true
             ];
